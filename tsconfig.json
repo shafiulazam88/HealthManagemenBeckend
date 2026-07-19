@@ -1,0 +1,43 @@
+// {
+//   "compilerOptions": {
+//     "module": "ESNext",
+//     "moduleResolution": "bundler",
+//     "target": "ES2023",
+//     "strict": true,
+//     "esModuleInterop": true,
+//     "ignoreDeprecations": "6.0"
+//   }
+// }
+{
+  "compilerOptions": {
+    "target": "ES2023",
+
+    "module": "esnext",
+
+    "moduleResolution": "bundler",
+
+    "strict": true,
+
+    "rootDir": "./src",
+
+    "outDir": "./dist",
+
+    "esModuleInterop": true,
+
+    "resolveJsonModule": true,
+
+    "skipLibCheck": true,
+
+    "forceConsistentCasingInFileNames": true,
+
+    "sourceMap": true,
+
+    "noUncheckedIndexedAccess": true,
+
+    "exactOptionalPropertyTypes": true,
+    "ignoreDeprecations": "6.0"
+  },
+
+  "include": ["src/**/*", "eslint.config.mjs", "prisma.config.ts", "prisma/**/*.ts"],
+  "exclude":["node_modules","dist", "prisma.config.ts"],
+}
