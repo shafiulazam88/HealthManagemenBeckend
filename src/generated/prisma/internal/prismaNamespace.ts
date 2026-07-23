@@ -384,7 +384,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
-  Specialty: 'Specialty'
+  Speciality: 'Speciality'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -400,81 +400,81 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "specialty"
+    modelProps: "speciality"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
-    Specialty: {
-      payload: Prisma.$SpecialtyPayload<ExtArgs>
-      fields: Prisma.SpecialtyFieldRefs
+    Speciality: {
+      payload: Prisma.$SpecialityPayload<ExtArgs>
+      fields: Prisma.SpecialityFieldRefs
       operations: {
         findUnique: {
-          args: Prisma.SpecialtyFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpecialtyPayload> | null
+          args: Prisma.SpecialityFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpecialityPayload> | null
         }
         findUniqueOrThrow: {
-          args: Prisma.SpecialtyFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpecialtyPayload>
+          args: Prisma.SpecialityFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpecialityPayload>
         }
         findFirst: {
-          args: Prisma.SpecialtyFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpecialtyPayload> | null
+          args: Prisma.SpecialityFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpecialityPayload> | null
         }
         findFirstOrThrow: {
-          args: Prisma.SpecialtyFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpecialtyPayload>
+          args: Prisma.SpecialityFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpecialityPayload>
         }
         findMany: {
-          args: Prisma.SpecialtyFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpecialtyPayload>[]
+          args: Prisma.SpecialityFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpecialityPayload>[]
         }
         create: {
-          args: Prisma.SpecialtyCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpecialtyPayload>
+          args: Prisma.SpecialityCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpecialityPayload>
         }
         createMany: {
-          args: Prisma.SpecialtyCreateManyArgs<ExtArgs>
+          args: Prisma.SpecialityCreateManyArgs<ExtArgs>
           result: BatchPayload
         }
         createManyAndReturn: {
-          args: Prisma.SpecialtyCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpecialtyPayload>[]
+          args: Prisma.SpecialityCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpecialityPayload>[]
         }
         delete: {
-          args: Prisma.SpecialtyDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpecialtyPayload>
+          args: Prisma.SpecialityDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpecialityPayload>
         }
         update: {
-          args: Prisma.SpecialtyUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpecialtyPayload>
+          args: Prisma.SpecialityUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpecialityPayload>
         }
         deleteMany: {
-          args: Prisma.SpecialtyDeleteManyArgs<ExtArgs>
+          args: Prisma.SpecialityDeleteManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateMany: {
-          args: Prisma.SpecialtyUpdateManyArgs<ExtArgs>
+          args: Prisma.SpecialityUpdateManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateManyAndReturn: {
-          args: Prisma.SpecialtyUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpecialtyPayload>[]
+          args: Prisma.SpecialityUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpecialityPayload>[]
         }
         upsert: {
-          args: Prisma.SpecialtyUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpecialtyPayload>
+          args: Prisma.SpecialityUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpecialityPayload>
         }
         aggregate: {
-          args: Prisma.SpecialtyAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateSpecialty>
+          args: Prisma.SpecialityAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSpeciality>
         }
         groupBy: {
-          args: Prisma.SpecialtyGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.SpecialtyGroupByOutputType>[]
+          args: Prisma.SpecialityGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SpecialityGroupByOutputType>[]
         }
         count: {
-          args: Prisma.SpecialtyCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.SpecialtyCountAggregateOutputType> | number
+          args: Prisma.SpecialityCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SpecialityCountAggregateOutputType> | number
         }
       }
     }
@@ -517,7 +517,7 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
-export const SpecialtyScalarFieldEnum = {
+export const SpecialityScalarFieldEnum = {
   id: 'id',
   title: 'title',
   description: 'description',
@@ -527,7 +527,7 @@ export const SpecialtyScalarFieldEnum = {
   deletedAt: 'deletedAt'
 } as const
 
-export type SpecialtyScalarFieldEnum = (typeof SpecialtyScalarFieldEnum)[keyof typeof SpecialtyScalarFieldEnum]
+export type SpecialityScalarFieldEnum = (typeof SpecialityScalarFieldEnum)[keyof typeof SpecialityScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -718,7 +718,7 @@ export type PrismaClientOptions = ({
   queryPlanCacheMaxSize?: number
 }
 export type GlobalOmitConfig = {
-  specialty?: Prisma.SpecialtyOmit
+  speciality?: Prisma.SpecialityOmit
 }
 
 /* Types for Logging */

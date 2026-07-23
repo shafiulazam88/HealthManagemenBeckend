@@ -4,6 +4,4 @@ node_modules
 !.evn.example
 dist
 
-/generated/prisma
-
-/generated/prisma
+/src/generated

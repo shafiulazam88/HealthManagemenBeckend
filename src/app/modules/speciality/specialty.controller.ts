@@ -1,10 +1,30 @@
-import { Request, Response } from "express";
+import {  Request,  Response } from "express";
 import { SpecialityService } from "./speciality.service";
+import catchAsync from "../../shared/catchAsync";
 
-const createSpeciality = async(req: Request,res:Response  )=>{
-    try{
+interface IResponseData<T>{
+    httpStatuscode: number;
+    success: boolean;
+    message:string;
+    data?:T;
+
+}
+const sendResponse =<T>(res:Response , responseData : IResponseData<T>)=>{
+    const {httpStatuscode , success , message , data}= responseData;
+    res.status(httpStatuscode).json(
+        {
+            success,
+            message,
+            data
+        }
+    );
+
+}
+
+const createSpeciality = catchAsync(async(req: Request,res:Response  )=>{
+   
         const payload = req.body;
-    const result = await SpecialityService.createSpeciality(payload);
+        const result = await SpecialityService.createSpeciality(payload);
 
     res.status(201).json(
         {
@@ -13,18 +33,14 @@ const createSpeciality = async(req: Request,res:Response  )=>{
             data:result
         }
       );
-    }
-    catch(error : any){
-        console.log(error)
-        res.status(500).json({
-            success:false,
-            message:'failed to create speciality',
-            error: error instanceof Error ? error.message : 'unknown error'
-        })
-    }
+   
+   
 }
-const GetAllSpeciality=async(req:Request , res:Response)=>{
-    try{
+)
+
+ 
+const GetAllSpeciality= catchAsync(async(req:Request , res:Response)=>{
+    
         const specialities = await SpecialityService.getAllSpecialities();
             res.status(201).json(
           {
@@ -32,23 +48,12 @@ const GetAllSpeciality=async(req:Request , res:Response)=>{
             message: "specialities",
             data:specialities
           }
-    );
+         );
+  }
+)
 
-
-    }
-    catch(error : any){
-        console.log(error)
-        res.status(500).json({
-            success:false,
-            message:'failed to get specialities',
-            error: error instanceof Error ? error.message : 'unknown error'
-        })
-    }
-
-}
-
-const DeleteSpeciality = async(req:Request , res:Response)=>{
-     try{
+const DeleteSpeciality = catchAsync(async(req:Request , res:Response)=>{
+     
         const{id} = req.params;
         const DeleteSpeciality = await SpecialityService.DeleteSpeciality(id as string);
             res.status(201).json(
@@ -57,22 +62,12 @@ const DeleteSpeciality = async(req:Request , res:Response)=>{
             message: "deleted",
             data:DeleteSpeciality
             }
-           );
+           ); 
 
-
-      }
-    catch(error : any){
-        console.log(error)
-        res.status(500).json({
-            success:false,
-            message:'failed to delete speciality',
-            error: error instanceof Error ? error.message : 'unknown error'
-        })
-    }
-
-}
-const UpdateSpeciality= async(req:Request , res:Response)=>{
-    try{
+ }
+)
+const UpdateSpeciality=catchAsync( async(req:Request , res:Response)=>{
+   
         const{id} = req.params;
         const updateData = req.body;
         const UpdateSpeciality = await SpecialityService.UpdateSpeciality(id as string, updateData);
@@ -82,20 +77,9 @@ const UpdateSpeciality= async(req:Request , res:Response)=>{
             message: "updated",
             data:UpdateSpeciality
             }
-           );
-
-
-      }
-    catch(error : any){
-        console.log(error)
-        res.status(500).json({
-            success:false,
-            message:'failed to update speciality',
-            error: error instanceof Error ? error.message : 'unknown error'
-        })
-    }
-
-}
+           ); 
+ }
+)
 
 export const SpecialityController={
     createSpeciality,

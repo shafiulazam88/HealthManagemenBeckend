@@ -51,7 +51,7 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  Specialty: 'Specialty'
+  Speciality: 'Speciality'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -70,7 +70,7 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
-export const SpecialtyScalarFieldEnum = {
+export const SpecialityScalarFieldEnum = {
   id: 'id',
   title: 'title',
   description: 'description',
@@ -80,7 +80,7 @@ export const SpecialtyScalarFieldEnum = {
   deletedAt: 'deletedAt'
 } as const
 
-export type SpecialtyScalarFieldEnum = (typeof SpecialtyScalarFieldEnum)[keyof typeof SpecialtyScalarFieldEnum]
+export type SpecialityScalarFieldEnum = (typeof SpecialityScalarFieldEnum)[keyof typeof SpecialityScalarFieldEnum]
 
 
 export const SortOrder = {
