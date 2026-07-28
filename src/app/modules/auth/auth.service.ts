@@ -27,17 +27,7 @@ const registerPatient= async(payload:RegisterPatientInput)=>{
     }
     // //if user patient then create patient 
     //todo
-    // const patient = await prisma.$transaction(async (tx) => {
-    //     const user = await tx.user.create({
-    //         data: {
-    //             name: data.user.name,
-    //             email: data.user.email,
-    //             password: data.user.password,
-    //             role: "PATIENT"
-    //         }
-    //     })
-    //     return user;
-    // })
+    try {
     const patient =await prisma.$transaction((tx)=>{
         const patientTx = tx.patient.create({
             data: {
@@ -54,13 +44,23 @@ const registerPatient= async(payload:RegisterPatientInput)=>{
     return{
         ...data,
         patient
-    };
+    }
+} catch (error) {
+    console.log("transaction error", error)
+    //if user created I but patien not created we will delete the user for safe check
+    await prisma.user.delete({
+        where: {
+            id: data.user.id
+        }
+    })
+    throw error;
 }
-
+}
 interface loginUserInput {
     email: string;
     password: string;
 }
+
 const loginUser = async(payload:loginUserInput)=>{
     const {email , password} = payload;
     const data = await auth.api.signInEmail(
@@ -83,7 +83,7 @@ const loginUser = async(payload:loginUserInput)=>{
 
 
 
-export const AuthService = {
+export const AuthService ={
     registerPatient,
     loginUser
 }
