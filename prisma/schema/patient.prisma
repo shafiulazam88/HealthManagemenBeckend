@@ -1,0 +1,24 @@
+
+model Patient {
+    id String @id @default(uuid())
+    name String
+    email String @unique
+    profilePhoto String?
+    contactNumber String?
+    address String?
+    isDeleted Boolean @default(false)
+    deletedAt DateTime?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    //relation 
+    userId String @unique
+    //on cascade cause if patient deleted then user also deleted
+    //on update cascade cause if user updated then patient also updated
+    user User @relation(fields: [userId], references: [id] , onDelete: Cascade , onUpdate: Cascade)
+
+    @@index([email] , name: "idx_patient_email")
+    @@index([isDeleted] , name: "idx_patient_is_deleted")
+    @@map("patient")
+
+
+}
