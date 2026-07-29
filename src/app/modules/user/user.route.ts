@@ -5,4 +5,5 @@ import { UserController } from "./user.controller";
 const router = Router();
 router.post("/create-doctor", UserController.createDoctor);
 
+
 export const UserRoute= router;
