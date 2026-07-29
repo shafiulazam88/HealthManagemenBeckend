@@ -11,4 +11,25 @@ model Speciality {
   @@index([title], name:"idx_speciality_title")
 
   @@map("Specilities")
+
+  doctorSpecialities DoctorSpeciality[]
+}
+
+model DoctorSpeciality {
+    id String @id @default(uuid())
+    doctorId String
+    doctor Doctor @relation(fields: [doctorId], references: [id] , onDelete: Cascade , onUpdate: Cascade)
+    specialityId String
+    speciality Speciality @relation(fields: [specialityId], references: [id] , onDelete: Cascade , onUpdate: Cascade)
+    //composite index
+    @@unique([doctorId, specialityId])
+    //indexes
+    @@index([doctorId] , name: "idx_doctor_speciality_doctorId")
+    @@index([specialityId] , name: "idx_doctor_speciality_specialityId")
+
+    
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    
+    @@map("doctor_specialities")
 }
