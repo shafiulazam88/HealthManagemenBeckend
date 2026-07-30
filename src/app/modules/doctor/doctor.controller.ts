@@ -17,6 +17,14 @@ const getAllDoctors = catchAsync(async (req : Request, res: Response) => {
 const getDoctorById = catchAsync(async (req : Request, res: Response) => {
     const id = req.params.id as string;
     const result = await  doctorService.getDoctorById(id);
+    if(!result){
+        res.status(httpStatus.NOT_FOUND).json({
+            success: false,
+            message: "Doctor not found",
+            data: null
+        });
+        return;
+    }
 
     res.status(httpStatus.OK).json({
         success: true,
@@ -27,6 +35,14 @@ const getDoctorById = catchAsync(async (req : Request, res: Response) => {
 const updateDoctorById = catchAsync(async (req : Request, res: Response) => {
     const id = req.params.id as string;
     const result = await  doctorService.updateDoctorById(id, req.body);
+    if(!result){
+        res.status(httpStatus.NOT_FOUND).json({
+            success: false,
+            message: "Doctor not found",
+            data: null
+        });
+        return;
+    }
 
     res.status(httpStatus.OK).json({
         success: true,
@@ -35,8 +51,28 @@ const updateDoctorById = catchAsync(async (req : Request, res: Response) => {
     });
 })
 
+const deleteDoctor = catchAsync(async (req : Request, res: Response) => {
+    const id = req.params.id as string;
+    const result = await  doctorService.deleteDoctor(id);
+    if(!result){
+        res.status(httpStatus.NOT_FOUND).json({
+            success: false,
+            message: "Doctor not found",
+            data: null
+        });
+        return;
+    }
+
+    res.status(httpStatus.OK).json({
+        success: true,
+        message: "Doctor deleted successfully",
+        data: result
+    });
+})
+
 export const doctorController = {
     getAllDoctors,
     getDoctorById,
-    updateDoctorById
+    updateDoctorById,
+    deleteDoctor
 }

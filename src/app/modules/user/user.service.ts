@@ -258,6 +258,8 @@ const createDoctor = async (payload: IDoctor) => {
     
 }
 
+
+
 export const UserService = {
-    createDoctor
+    createDoctor,
 }
