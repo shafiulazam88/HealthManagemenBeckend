@@ -1,13 +1,15 @@
 
 import { Router } from "express";
 import { doctorController } from "./doctor.controller";
+import validateRequest from "../../middleware/validateRequest";
+import doctorUpdateValidation from "./doctor.validation";
 
 
 const router = Router();
 router.get('/' , doctorController.getAllDoctors);
 router.get('/:id' , doctorController.getDoctorById);
-
-router.patch('/:id' , doctorController.updateDoctorById);
+//update partial update
+router.patch('/:id' ,validateRequest(doctorUpdateValidation), doctorController.updateDoctorById);
 
 router.delete('/:id' , doctorController.deleteDoctor);
 

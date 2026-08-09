@@ -53,9 +53,16 @@ const getDoctorById = async(id:string) => {
 const updateDoctorById = async(id:string,payload:UpdateDoctor) => {
     //first verify specialities
 
-    if(payload.specialities){
-        //check if all specialities exist
-        const verifiedSpeciality = await prisma.speciality.findMany(
+    
+   
+   try {
+       
+
+      const result = await prisma.$transaction(async (tx) => 
+        {
+         if(payload.specialities && payload.specialities.length > 0){
+          //check if all specialities exist
+         const verifiedSpeciality = await tx.speciality.findMany(
             {
                 where:{
                     id: {
@@ -64,18 +71,12 @@ const updateDoctorById = async(id:string,payload:UpdateDoctor) => {
                 }
             }
         );
-        if(verifiedSpeciality.length !== payload.specialities.length){
+         if(verifiedSpeciality.length !== payload.specialities.length){
             throw new Error("one or more specialities not found");
-        }
+           }
         
        
-    }
-   
-   try {
-       
-
-      const result = await prisma.$transaction(async (tx) => 
-        {
+         }
          //verify id
         const existingDoctor = await tx.doctor.findUnique({
             where:{id, isDeleted:false}
@@ -84,7 +85,7 @@ const updateDoctorById = async(id:string,payload:UpdateDoctor) => {
             throw new Error("doctor not found");
         }
         //now update speciality if available
-        if(payload.specialities){
+        if(payload.specialities && payload.specialities.length > 0){
             //first delete all existing specialities
             await tx.doctorSpeciality.deleteMany({
                 where:{
