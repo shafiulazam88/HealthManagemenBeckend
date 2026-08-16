@@ -11,7 +11,10 @@ const createToken= (payload: JwtPayload, secret:string, {expiresIn}:SignOptions)
 const verifyToken=(token:string, secret:string)=>{
     try {
         const decoded= jwt.verify(token, secret) as JwtPayload;
-        return decoded;
+         return {
+            success: true,
+            data: decoded
+        };
     } catch (error:any) {
         return{
             success:false,

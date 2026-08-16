@@ -8,10 +8,12 @@ const validateRequest =(zodObject: z.ZodObject)=>{
         if(!pasrsedResult.success){
             next(pasrsedResult.error);
         }
+
         // sanitize the request body
         req.body = pasrsedResult.data;
         next();
     }
 }
+
 
 export default validateRequest;
