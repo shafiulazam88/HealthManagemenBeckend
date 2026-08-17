@@ -3,7 +3,7 @@
 import { Role, Speciality } from "../../../generated/prisma/client";
 import { auth } from "../../lib/auth";
 import { prisma } from "../../lib/prisma";
-import { IDoctor } from "./user.interface";
+import { IAdmin, IDoctor, ISuperAdmin } from "./user.interface";
 
 // const createDoctor = async(payload:IDoctor) => {
 //     const specialities : Speciality[]= [];
@@ -160,7 +160,9 @@ const createDoctor = async (payload: IDoctor) => {
     }
     //now signup
     console.time("better-auth");
-
+    // create user in better-auth
+    // better auth checks user exists or not
+    // if user exists, it will throw error
     const userData = await auth.api.signUpEmail({
         body : {
             email: payload.doctor.email,
@@ -258,8 +260,60 @@ const createDoctor = async (payload: IDoctor) => {
     
 }
 
+export const createAdmin= async(payload: IAdmin)=>{
+     
+    
+
+    try {
+        //signup in better auth
+        // better auth handles duplicate users
+        // we dont need to handle duplicate users here
+    const admin = await auth.api.signUpEmail({
+        body: {
+            email: payload.email,
+            password: payload.password,
+            role: Role.ADMIN,
+            name: payload.name,
+            needPasswordChange: true
+        }
+     })
+
+     return admin;
+
+        
+    } catch (error) {
+        console.log("create admin error :", error );
+
+        throw error;
+    }
+
+
+}
+
+const createSuperAdmin = async (payload:ISuperAdmin) => {
+
+    try {
+        const superAdmin = await auth.api.signUpEmail({
+            body: {
+                email: payload.email,
+                password: payload.password,
+                role: Role.SUPER_ADMIN,
+                name: payload.name,
+                needPasswordChange: true
+            }
+        })
+        
+        return superAdmin;
+    } catch (error) {
+        console.log("create super admin error :", error );
+        throw error;
+    }
+    
+}
 
 
 export const UserService = {
     createDoctor,
+    createAdmin,
+    createSuperAdmin
 }

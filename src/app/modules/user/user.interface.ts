@@ -20,3 +20,22 @@ export interface IDoctor {
    }
    specialities: string[];
 }
+
+export interface IAdmin {
+    
+   name: string;
+   email: string;
+   password: string;
+   profilePhoto?: string;
+   contactNumber?: string;
+   address?: string;
+}
+export interface ISuperAdmin {
+    
+   name: string;
+   email: string;
+   password: string;
+   profilePhoto?: string;
+   contactNumber?: string;
+   address?: string;
+}
