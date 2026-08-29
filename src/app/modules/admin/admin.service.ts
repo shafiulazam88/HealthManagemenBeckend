@@ -4,6 +4,7 @@ import { prisma } from "../../lib/prisma";
 import { updateAdmin } from "./admin.interface";
 import { role } from "better-auth/plugins";
 import { Role } from "../../../generated/prisma/enums";
+import { IRequestUser } from "../../interface.ts/userRequest.interface";
 
 //get all admins
 const getAllAdmins = async() => {
@@ -122,9 +123,10 @@ const updateAdmin = async(id:string, payload:updateAdmin) => {
 
 
 //soft delete admin
-const DeleteAdmin = async(id:string) => {
+const DeleteAdmin = async(id:string,user:IRequestUser) => {
     try{
     
+        
     const result = prisma.$transaction(async (tx) => {
         //check id exist or not
         const adminExist = await tx.user.findUnique({
@@ -137,6 +139,10 @@ const DeleteAdmin = async(id:string) => {
 
         if(!adminExist){
             throw new Error("Admin not found");
+        }
+        //validate slef delete
+        if(adminExist.id === user.userId){
+            throw new Error("You can't delete yourself");
         }
     const admin = await tx.user.update({
         where:{

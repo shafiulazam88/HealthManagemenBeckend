@@ -13,7 +13,7 @@ export const checkAuth = (...authRoles: Role[]) => async (req: Request, res: Res
         // get the better auth session and better aut session is in database
         const sessionToken = cookieUtils.getCookie(req, "better-auth.session_token");
         if(!sessionToken){
-            return res.status(status.UNAUTHORIZED).json({ message: "Unauthorized" });
+            throw new Error("Unauthorized");
         }
         // session exists or not in data base
         //for better auth token
@@ -70,20 +70,25 @@ export const checkAuth = (...authRoles: Role[]) => async (req: Request, res: Res
                     //todo app error : throw appError
                     return res.status(status.FORBIDDEN).json({ message: "Forbidden access" });
                 }
+                req.user={
+                userId: user.id,
+                role: user.role,
+                email: user.email,
+              }
             }
            
-
+             
         }
          // for jwt  access token verification
         const accessToken = cookieUtils.getCookie(req,'accessToken')
-         if(accessToken){
+         
                 // get  access token
                 // if access  token then verify it using jwt
                 // check verify success
                 // if verifed then check role 
                 // if role not match then throw error
                 // if role match then continue
-                const accessToken = cookieUtils.getCookie(req,'accessToken');
+                
                 if(!accessToken)
                 {
                     // todo app error
@@ -103,8 +108,7 @@ export const checkAuth = (...authRoles: Role[]) => async (req: Request, res: Res
                     //todo app error 
                     throw new Error(status.FORBIDDEN + ' ' + 'Forbidden access! you can not access this route' )
                 }
-            
-        }
+       
          next();
                
         

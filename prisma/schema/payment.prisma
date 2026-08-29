@@ -1,0 +1,17 @@
+model Payment {
+  id            String      @id @default(uuid())
+  amount        Float
+  transactionId String     @unique
+  status        PaymentStatus @default(UNPAID)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  paymentGatewayData Json?
+
+  // Relation fields
+  appointmentId String      @unique // Unique for 1:1 relation
+  appointment   Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade , onUpdate: Cascade)
+  
+  @@index([appointmentId])
+  @@index([transactionId])
+  @@map("payment")
+}

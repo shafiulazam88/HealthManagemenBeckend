@@ -38,6 +38,6 @@
     "ignoreDeprecations": "6.0"
   },
 
-  "include": ["src/**/*", "eslint.config.mjs", "prisma.config.ts", "prisma/**/*.ts"],
+  "include": ["src/**/*", "eslint.config.mjs", "prisma.config.ts", "prisma/**/*.ts","src/app/interface.ts/**/*"],
   "exclude":["node_modules","dist", "prisma.config.ts"],
 }

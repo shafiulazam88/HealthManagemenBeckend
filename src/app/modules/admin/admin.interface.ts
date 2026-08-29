@@ -3,9 +3,9 @@ import { Gender, UserStatus } from "../../../generated/prisma/enums";
 export interface updateAdmin {
     name?: string;
     email?: string;
-    phone?: string;
+    contactNumber?: string;
     address?: string;
     status?: UserStatus;
     gender?: Gender;
-    image?: string;
+    profilePhoto?: string;
 }

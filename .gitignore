@@ -5,3 +5,7 @@ node_modules
 dist
 
 /src/generated
+
+node_modules
+
+oracle.sql-developer-26.2.1-win32-x64.vsix

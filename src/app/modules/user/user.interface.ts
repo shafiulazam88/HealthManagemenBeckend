@@ -27,8 +27,9 @@ export interface IAdmin {
    email: string;
    password: string;
    profilePhoto?: string;
-   contactNumber?: string;
+   contactNumber: string;
    address?: string;
+   status?:string;
 }
 export interface ISuperAdmin {
     
@@ -36,6 +37,7 @@ export interface ISuperAdmin {
    email: string;
    password: string;
    profilePhoto?: string;
-   contactNumber?: string;
+   contactNumber: string;
    address?: string;
+   status?:string;
 }

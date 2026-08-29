@@ -34,5 +34,29 @@ model Doctor {
 
     
     specialities DoctorSpeciality[]
+    doctorSchedules DoctorSchedules[]
+    appointments Appointment[]
+    reviews Review[]
+    MedicalReports MedicalReport[]
+    prescriptions Prescription[]
 }
 
+
+model DoctorSchedules {
+  id         String   @id @default(uuid()) 
+  doctorId   String   
+  scheduleId String   
+  isBooked   Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relations
+  doctor   Doctor   @relation(fields: [doctorId], references: [id])
+  schedule Schedule @relation(fields: [scheduleId], references: [id])
+
+  // An appointment is associated with this specific doctor's schedule slot
+  appointment Appointment?
+
+  @@unique([doctorId, scheduleId])
+  @@map("doctor_schedules")
+}

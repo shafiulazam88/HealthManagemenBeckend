@@ -1,8 +1,13 @@
 
+import status from "http-status";
+import { envVariable } from "../../../config/env";
 import { UserStatus } from "../../../generated/prisma/enums";
+import { IRequestUser } from "../../interface.ts/userRequest.interface";
 import { auth } from "../../lib/auth";
 import { prisma } from "../../lib/prisma";
+import { jwtUtils } from "../../utils/jwt";
 import { tokenUtils } from "../../utils/token";
+import { JwtPayload } from "jsonwebtoken";
 
 interface RegisterPatientInput {
     name: string;
@@ -137,10 +142,121 @@ const loginUser = async(payload:loginUserInput)=>{
     };
 }
 
+const getMe = async(user:IRequestUser)=>{
+    //first check the user is exist or not
+    const userData = await prisma.user.findUnique({
+        where:{
+            id: user.userId
+        },
+        include : {
+            patient : {
+                include : {
+                    appointments : true,
+                    reviews : true,
+                    prescriptions : true,
+                    MedicalReports : true,
+                    patientHealthData : true,
+                }
+            },
+            doctor : {
+                include : {
+                    specialities : true,
+                    appointments : true,
+                    reviews : true,
+                    prescriptions : true,
+                }
+            },
+            
+        }
+    })
+    if(!userData){
+        throw new Error("User not found");
+    }
+    return userData;
+}
+
+//generate after expiration of aceess token using refresh token
+const getNewToken = async(refreshToken:string ,sessionToken:string )=>{
+    //session token stores in db so we cant refresh or generate it
+    //so we need to increase the expiration time of the session token
+
+    //check the session token is valid or not
+    const isSesssionTokenExists = await prisma.session.findUnique({
+        where:{
+            token: sessionToken,
+        },
+        include:{
+            user:true,
+        }
+    })
+
+    if(!isSesssionTokenExists){
+        //todo app error
+
+        throw new Error(status.UNAUTHORIZED.toString(),{cause: "Session token not found"});
+    }
 
 
+    // check token verified or not
+    const verifiedRefreshToken = jwtUtils.verifyToken(refreshToken,envVariable.REFRESH_TOKEN_SECRET);
 
+   
+    if(!verifiedRefreshToken.success && verifiedRefreshToken.error){
+        //todo app error
+        throw new Error(status.UNAUTHORIZED.toString(),{cause: "Invalid refresh token"});
+    }
+     const{data}= verifiedRefreshToken as JwtPayload;
+    const newAccessToken = tokenUtils.getAccessToken
+    (
+        {
+            userId: data.user.userId,
+            email: data.user.email,
+            role: data.user.role,
+            name: data.user.name,
+            status: data.user.status,
+            isDeleted: data.user.isDeleted,
+            emailVerified: data.user.emailVerified  
+
+        }
+    )
+
+    //if refresh token get expired then how can we generate access token 
+    // thats why we need to generate new refresh token
+    const newRefreshToken = tokenUtils.getRefreshToken
+    (
+        {
+            userId: data.user.userId,
+            email: data.user.email,
+            role: data.user.role,
+            name: data.user.name,
+            status: data.user.status,
+            isDeleted: data.user.isDeleted,
+            emailVerified: data.user.emailVerified  
+        }
+    )
+
+    const updatedSession = await prisma.session.update({
+        where:{
+            token: sessionToken,
+        },
+        data:{
+            token: sessionToken,
+            expiresAt: new Date(Date.now()+ 86400000), // 1 day increased
+            updatedAt: new Date()
+        }
+    })
+    // we need just token so destructure
+    const{token}= updatedSession;
+
+    return{
+       accessToken: newAccessToken,
+       refreshToken: newRefreshToken,
+       sessionToken: token
+    }
+}
 export const AuthService ={
     registerPatient,
-    loginUser
+    loginUser,
+    getMe ,
+    getNewToken
 }
