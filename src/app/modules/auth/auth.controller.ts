@@ -4,7 +4,6 @@ import { AuthService } from "./auth.service";
 import { tokenUtils } from "../../utils/token";
 import status from "http-status";
 
-
 const registerPatient= catchAsync(async (req:Request, res:Response) => {
     const payload = req.body;
     
@@ -13,7 +12,7 @@ const registerPatient= catchAsync(async (req:Request, res:Response) => {
     tokenUtils.setAccessTokenCookie(res, accessToken);
     tokenUtils.setRefreshTokenCookie(res, refreshToken);
     tokenUtils.setBetterAuthSessionCookie(res, token as string) ;
-    res.status(201).json({
+    res.status(status.CREATED).json({
         success: true,
         message: "Patient registered successfully",
         data:  {
@@ -36,7 +35,7 @@ const loginUser = catchAsync(async (req:Request, res:Response) => {
     tokenUtils.setRefreshTokenCookie(res, refreshToken);
     tokenUtils.setBetterAuthSessionCookie(res, token);
 
-    res.status(201).json({
+    res.status(status.OK).json({
         success: true,
         message: "User logged in successfully",
         data: {
@@ -54,7 +53,7 @@ const getMe = catchAsync(async (req:Request, res:Response) => {
     const user = req.user;
     
     const result = await AuthService.getMe(user);
-    res.status(200).json({
+    res.status(status.OK).json({
         success: true,
         message: "User retrieved successfully",
         data: result
@@ -75,7 +74,7 @@ const getNewToken = catchAsync(async (req:Request, res:Response) => {
     tokenUtils.setRefreshTokenCookie(res, newRefreshToken);
     tokenUtils.setBetterAuthSessionCookie(res, token);
     
-    res.status(200).json({
+    res.status(status.OK).json({
         success: true,
         message: "New token generated successfully",
         data: {
@@ -87,9 +86,44 @@ const getNewToken = catchAsync(async (req:Request, res:Response) => {
     });
 })
 
+const changePassword = catchAsync(async (req:Request, res:Response) => {
+    const payload = req.body;
+    
+    const betterAuthSession = req.cookies["better-auth.session_token"];
+    if(!betterAuthSession){
+        throw new Error(status.UNAUTHORIZED.toString(), { cause: "Unauthorized" });
+    }
+    const result = await AuthService.changePassword(payload, betterAuthSession);
+    const{accessToken, refreshToken, token}= result;
+    tokenUtils.setAccessTokenCookie(res,accessToken)
+    tokenUtils.setRefreshTokenCookie(res, refreshToken)
+    tokenUtils.setBetterAuthSessionCookie(res, token as string)
+    res.status(status.OK).json({
+        success: true,
+        message: "Password changed successfully",
+        data: result
+    });
+});
+
+// const verifyEmail = catchAsync(
+//     async(req:Request , res:Response)=>{
+//         const{email, otp } = req.body;
+//         await AuthService.verifyEmail(email, otp);
+//         res.status(status.OK).json({
+//             success: true,
+//             message: "Email verified successfully"
+//         });
+
+//     }
+// )
+
+const verifyEmail= catchAsync
+
 export const AuthController = {
     registerPatient,
     loginUser,
     getMe,
-    getNewToken
+    getNewToken,
+    changePassword,
+    verifyEmail
 }

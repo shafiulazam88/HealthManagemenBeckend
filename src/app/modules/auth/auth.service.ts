@@ -8,12 +8,10 @@ import { prisma } from "../../lib/prisma";
 import { jwtUtils } from "../../utils/jwt";
 import { tokenUtils } from "../../utils/token";
 import { JwtPayload } from "jsonwebtoken";
+import  {IChangePassword, loginUserInput, RegisterPatientInput}  from "./auth.interface";
+import { revokeOtherSessions } from "better-auth/api";
 
-interface RegisterPatientInput {
-    name: string;
-    email: string;
-    password: string;
-}
+
 const registerPatient= async(payload:RegisterPatientInput)=>{
     const {name , email , password} = payload;
     const data = await auth.api.signUpEmail(
@@ -89,10 +87,7 @@ const registerPatient= async(payload:RegisterPatientInput)=>{
 }
 //login 
 
-interface loginUserInput {
-    email: string;
-    password: string;
-}
+
 
 const loginUser = async(payload:loginUserInput)=>{
     const {email , password} = payload;
@@ -205,17 +200,18 @@ const getNewToken = async(refreshToken:string ,sessionToken:string )=>{
         //todo app error
         throw new Error(status.UNAUTHORIZED.toString(),{cause: "Invalid refresh token"});
     }
-     const{data}= verifiedRefreshToken as JwtPayload;
+     const data = verifiedRefreshToken.data as JwtPayload;
+    //  console.log(data);
     const newAccessToken = tokenUtils.getAccessToken
     (
         {
-            userId: data.user.userId,
-            email: data.user.email,
-            role: data.user.role,
-            name: data.user.name,
-            status: data.user.status,
-            isDeleted: data.user.isDeleted,
-            emailVerified: data.user.emailVerified  
+            userId: data.userId,
+            email: data.email,
+            role: data.role,
+            name: data.name,
+            status: data.status,
+            isDeleted: data.isDeleted,
+            emailVerified: data.emailVerified  
 
         }
     )
@@ -225,13 +221,13 @@ const getNewToken = async(refreshToken:string ,sessionToken:string )=>{
     const newRefreshToken = tokenUtils.getRefreshToken
     (
         {
-            userId: data.user.userId,
-            email: data.user.email,
-            role: data.user.role,
-            name: data.user.name,
-            status: data.user.status,
-            isDeleted: data.user.isDeleted,
-            emailVerified: data.user.emailVerified  
+            userId: data.userId,
+            email: data.email,
+            role: data.role,
+            name: data.name,
+            status: data.status,
+            isDeleted: data.isDeleted,
+            emailVerified: data.emailVerified  
         }
     )
 
@@ -254,9 +250,98 @@ const getNewToken = async(refreshToken:string ,sessionToken:string )=>{
        sessionToken: token
     }
 }
+
+const changePassword= async(payload:IChangePassword , sessionToken:string)=>{
+
+    const session = await auth.api.getSession(
+        {
+            headers: new Headers({
+                Authorization: `Bearer ${sessionToken}`
+            })
+        }
+    )
+
+    if(!session){
+        //todo appError
+        throw new Error(status.UNAUTHORIZED.toString(),{cause: "Invalid session"});
+    }
+    const{ currentPassword, newPassword} = payload;
+
+    const result = await auth.api.changePassword ({
+        body:{
+           
+            currentPassword,
+            newPassword,
+            revokeOtherSessions:true
+        },
+        headers: new Headers({
+            Authorization: `Bearer ${sessionToken}`
+        })
+    })
+
+    const accessToken = tokenUtils.getAccessToken (
+        {
+           userId: session.user.id,
+           email: session.user.email,
+            role: session.user.role,
+            name: session.user.name,
+            status: session.user.status,
+            isDeleted: session.user.isDeleted,
+            emailVerified: session.user.emailVerified 
+
+        }
+    )
+    const refreshToken = tokenUtils.getRefreshToken (
+        {
+           userId: session.user.id,
+           email: session.user.email,
+            role: session.user.role,
+            name: session.user.name,
+            status: session.user.status,
+            isDeleted: session.user.isDeleted,
+            emailVerified: session.user.emailVerified 
+
+        }
+    )
+    
+
+
+    return { ...result,
+        accessToken,
+        refreshToken,
+        // token:sessionToken
+    };
+    
+
+}
+
+const verifyEmail = async(email:string , otp:string)=>{
+            const result  = await auth.api.verifyEmailOTP(
+                {
+                    body:{
+                        email,
+                        otp
+                    }
+                }
+            )
+            if(result.status && !result.user.emailVerified)
+            {
+                await prisma.user.update({
+                    where:{
+                        email
+                    },
+                    data:{
+                        emailVerified:true
+                    }
+                })
+            }
+};
+
 export const AuthService ={
     registerPatient,
     loginUser,
     getMe ,
-    getNewToken
+    getNewToken,
+    changePassword,
+    verifyEmail
 }

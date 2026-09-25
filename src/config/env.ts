@@ -14,6 +14,13 @@ interface envConfig{
     BETTER_AUTH_SESSION_TOKEN_EXPIRES_IN: string;
     BETTER_AUTH_SESSION_TOKEN_UPDATE_AGE: string;
     BETTER_AUTH_SESSION_TOKEN_COOKIE_CACHE_MAX_AGE: string;
+    EMAIL_SENDER:{
+        host: string;
+        port: string;
+        user: string;
+        pass: string;
+        from: string;
+    };
 }
 const loadedEnv =():envConfig=> {
     const requiredEnv = [
@@ -28,7 +35,13 @@ const loadedEnv =():envConfig=> {
         'REFRESH_TOKEN_EXPIRES_IN',
         'BETTER_AUTH_SESSION_TOKEN_EXPIRES_IN',
         'BETTER_AUTH_SESSION_TOKEN_UPDATE_AGE',
-        'BETTER_AUTH_SESSION_TOKEN_COOKIE_CACHE_MAX_AGE' 
+        'BETTER_AUTH_SESSION_TOKEN_COOKIE_CACHE_MAX_AGE',
+
+        'EMAIL_SENDER_HOST',
+        'EMAIL_SENDER_PORT',
+        'EMAIL_SENDER_USER',
+        'EMAIL_SENDER_PASS',
+        'EMAIL_SENDER_FROM'
     ];
     for (const varName of requiredEnv) {
         if (!process.env[varName]) {
@@ -47,7 +60,14 @@ const loadedEnv =():envConfig=> {
     REFRESH_TOKEN_EXPIRES_IN: process.env.REFRESH_TOKEN_EXPIRES_IN as string,
     BETTER_AUTH_SESSION_TOKEN_EXPIRES_IN: process.env.BETTER_AUTH_SESSION_TOKEN_EXPIRES_IN as string,
     BETTER_AUTH_SESSION_TOKEN_UPDATE_AGE: process.env.BETTER_AUTH_SESSION_TOKEN_UPDATE_AGE as string,
-    BETTER_AUTH_SESSION_TOKEN_COOKIE_CACHE_MAX_AGE: process.env.BETTER_AUTH_SESSION_TOKEN_COOKIE_CACHE_MAX_AGE as string
+    BETTER_AUTH_SESSION_TOKEN_COOKIE_CACHE_MAX_AGE: process.env.BETTER_AUTH_SESSION_TOKEN_COOKIE_CACHE_MAX_AGE as string,
+    EMAIL_SENDER: {
+        host: process.env.EMAIL_SENDER_HOST as string,
+        port: process.env.EMAIL_SENDER_PORT as string,
+        user: process.env.EMAIL_SENDER_USER as string,
+        pass: process.env.EMAIL_SENDER_PASS as string,
+        from: process.env.EMAIL_SENDER_FROM as string
+    }   
     }
 }
 export  const envVariable =loadedEnv();
