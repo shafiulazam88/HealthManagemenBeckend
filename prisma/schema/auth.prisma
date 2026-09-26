@@ -18,7 +18,7 @@ model User {
   needPasswordChange Boolean @default(false)
   isDeleted Boolean @default(false)
   deletedAt DateTime?
-  profilePhoto         String?
+  image        String?
   contactNumber String?
   gender Gender?
   address String?

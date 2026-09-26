@@ -1,7 +1,7 @@
 
 import status from "http-status";
 import { envVariable } from "../../../config/env";
-import { UserStatus } from "../../../generated/prisma/enums";
+import { Role, UserStatus } from "../../../generated/prisma/enums";
 import { IRequestUser } from "../../interface.ts/userRequest.interface";
 import { auth } from "../../lib/auth";
 import { prisma } from "../../lib/prisma";
@@ -409,8 +409,21 @@ const resetPassword = async(email:string, otp:string, newPassword:string)=>{
             }
         }
     )
+    
+    //neddPassword change false
+    if(user.needPasswordChange){
+        await prisma.user.update({
+            where:{
+                email
+            },
+            data:{
+                needPasswordChange:false
+            }
+        })
+    }
 
-    //delete the sessions of the user
+    //delete the sessions of the user to protect the other session on another device
+
     await prisma.session.deleteMany({
         where:{
             userId: user.id
@@ -418,6 +431,83 @@ const resetPassword = async(email:string, otp:string, newPassword:string)=>{
     })
     
 }
+
+// const loginWithGoogle = async()=>{
+//     const betterAuthUrl = envVariable.BETTER_AUTH_URL.replace(/\/$/, "");
+//     return {
+//         betterAuthUrl,
+//         callbackURL: `${betterAuthUrl}/api/v1/auth/google/success`,
+//     };
+// };
+
+const googleLoginSuccess = async(session:Record<string , any>)=>{
+    const isPatientExists = await prisma.patient.findUnique(
+        {
+            where:{
+                userId : session.user.id
+            }
+        }
+    )
+    //in the time of google login if patient doeasnt exist
+    // create the patient
+
+    if(!isPatientExists){
+        // await prisma.patient.create(
+        //     {
+        //         data:{
+        //             userId: session.user.id,
+        //             name: session.user.name,
+        //             email: session.user.email
+        //         }
+        //     }
+        // )
+        await  prisma.patient.create(
+            
+                {
+                    data:{
+                        userId: session.user.id,
+                        name:session.user.name,
+                        email:session.user.email
+
+                    }
+                }
+            
+        )
+        
+
+
+        
+    }
+    const accessToken = tokenUtils.getAccessToken({
+        userId:session.user.id,
+        role:session.user.role,
+        name:session.user.name,
+        
+    })
+    const refreshToken = tokenUtils.getRefreshToken(
+        {
+            userId:session.user.id,
+            role:session.user.role,
+            name:session.user.name,
+            
+            
+            
+        }
+    )
+    return{
+        accessToken,
+        refreshToken,
+
+
+
+    }
+};
+
+// const handleOAuthError = async(error?:string)=>{
+//     const frontendUrl = envVariable.FRONTEND_URL.replace(/\/$/, "");
+//     const message = error || "Google login failed";
+//     return `${frontendUrl}?oauthError=${encodeURIComponent(message)}`;
+// };
 export const AuthService ={
     registerPatient,
     loginUser,
@@ -426,5 +516,8 @@ export const AuthService ={
     changePassword,
     verifyEmail,
     forgetPassword,
-    resetPassword
+    resetPassword,
+    
+    googleLoginSuccess,
+   
 }
