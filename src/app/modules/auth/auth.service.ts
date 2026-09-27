@@ -452,31 +452,14 @@ const googleLoginSuccess = async(session:Record<string , any>)=>{
     // create the patient
 
     if(!isPatientExists){
-        // await prisma.patient.create(
-        //     {
-        //         data:{
-        //             userId: session.user.id,
-        //             name: session.user.name,
-        //             email: session.user.email
-        //         }
-        //     }
-        // )
-        await  prisma.patient.create(
-            
-                {
-                    data:{
-                        userId: session.user.id,
-                        name:session.user.name,
-                        email:session.user.email
-
-                    }
-                }
-            
-        )
         
-
-
-        
+        await prisma.patient.create({
+            data:{
+                userId: session.user.id,
+                name: session.user.name,
+                email: session.user.email
+            }
+        })
     }
     const accessToken = tokenUtils.getAccessToken({
         userId:session.user.id,
@@ -497,9 +480,6 @@ const googleLoginSuccess = async(session:Record<string , any>)=>{
     return{
         accessToken,
         refreshToken,
-
-
-
     }
 };
 

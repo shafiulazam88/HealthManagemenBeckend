@@ -11,7 +11,8 @@ import { envVariable } from "../../config/env";
 export const auth = betterAuth({
     baseURL:envVariable.BETTER_AUTH_URL,
     secret:envVariable.BETTER_AUTH_SECRET,
-    trustedOrigins: [envVariable.FRONTEND_URL],
+
+   
     
     database: prismaAdapter(prisma, {
         provider: "postgresql", // or "mysql", "postgresql", ...etc
@@ -158,6 +159,10 @@ export const auth = betterAuth({
     //     disableCSRFCheck: true,
 
     // },
+    redirectURLs:{
+        signIn:`${envVariable.BETTER_AUTH_URL}/api/v1/auth/google/success`,
+    },
+     trustedOrigins: [envVariable.FRONTEND_URL,envVariable.BETTER_AUTH_URL|| "http://localhost:5000"],
     advanced:{
         useSecureCookies:false,
         cookies:{

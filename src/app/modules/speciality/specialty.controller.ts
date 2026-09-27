@@ -2,6 +2,7 @@ import {  Request,  Response } from "express";
 import { SpecialityService } from "./speciality.service";
 import catchAsync from "../../shared/catchAsync";
 
+//respose sending utility function
 interface IResponseData<T>{
     httpStatuscode: number;
     success: boolean;
@@ -23,7 +24,12 @@ const sendResponse =<T>(res:Response , responseData : IResponseData<T>)=>{
 
 const createSpeciality = catchAsync(async(req: Request,res:Response  )=>{
    
-        const payload = req.body;
+        // const payload = req.body;
+        const payload = {...req.body,
+            icon : req.file?.path
+
+        };
+      
         const result = await SpecialityService.createSpeciality(payload);
 
     res.status(201).json(

@@ -15,8 +15,14 @@ import { envVariable } from "./config/env";
 const app:Application= express();
 
 // CORS configuration
+// app.use(cors({
+//     origin: envVariable.FRONTEND_URL,
+//     credentials: true,
+//     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+//     allowedHeaders: ['Content-Type', 'Authorization']
+// }));
 app.use(cors({
-    origin: envVariable.FRONTEND_URL,
+    origin: [envVariable.FRONTEND_URL,envVariable.BETTER_AUTH_URL],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
@@ -28,12 +34,14 @@ app.set("views", path.resolve(process.cwd(),`src/app/templates`));
 // Better Auth handler with custom path
 app.use("/api/v1/auth", toNodeHandler(auth));
 
-//enable url-encoding
+//enable url-encoding form data parsing
 app.use(express.urlencoded({extended:true}))
 //middleware to parse json
 app.use(express.json());
 //middleware to parse cookies
 app.use(cookieParser());
+
+
 
 app.use("/api/v1" , IndexRoutes)
 
