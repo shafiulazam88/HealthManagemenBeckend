@@ -2,7 +2,7 @@
 import status from "http-status";
 import { envVariable } from "../../../config/env";
 import { Role, UserStatus } from "../../../generated/prisma/enums";
-import { IRequestUser } from "../../interface.ts/userRequest.interface";
+import { IRequestUser } from "../../interface/userRequest.interface";
 import { auth } from "../../lib/auth";
 import { prisma } from "../../lib/prisma";
 import { jwtUtils } from "../../utils/jwt";

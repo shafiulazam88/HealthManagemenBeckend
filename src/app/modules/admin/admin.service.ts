@@ -4,7 +4,7 @@ import { prisma } from "../../lib/prisma";
 import { updateAdmin } from "./admin.interface";
 import { role } from "better-auth/plugins";
 import { Role } from "../../../generated/prisma/enums";
-import { IRequestUser } from "../../interface.ts/userRequest.interface";
+import { IRequestUser } from "../../interface/userRequest.interface";
 
 //get all admins
 const getAllAdmins = async() => {
